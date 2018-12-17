@@ -1,0 +1,52 @@
+<nav class="navbar navbar-inverse">
+  
+    <div class="navbar-header">
+    	<c:url var="home" value="/">
+		</c:url>
+      <a class="navbar-brand" href="${home}">HRMS</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="${home}">Home</a></li>
+      <security:authorize access="hasRole('ROLE_ADMIN')">
+      <c:url var="canList" value="/candidate/cList">
+			<c:param name="jobname" value="ALL"/>
+		</c:url>
+		<c:url var="candIntrPerf" value="/intrPanel/candList">
+			<c:param name="panel" value="ALL" />
+			<c:param name="interviewRound" value="ALL" />
+		</c:url>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="${canList}">Candidates List</a></li>
+			<li><a href="${candIntrPerf}">Candidates Performance</a></li>
+			<li><a href="${pageContext.request.contextPath}/getUserForm">Add Users</a></li>
+			<li><a href="${pageContext.request.contextPath}/userList">List Users</a></li>
+        </ul>
+      </li>
+	  </security:authorize>	
+      <!-- <li><a href="#">Page 1</a></li> -->
+      <security:authorize access="hasAnyRole('ROLE_MANAGER','ROLE_HR')">
+      <security:authentication property="principal.username" var="manager_hr"/>
+		<c:url var="panelList" value="/intrPanel/candList">
+			<c:param name="panel" value="${manager_hr}"/>
+			<c:param name="interviewRound" value="ALL"/>
+		</c:url>
+      <li><a href="${panelList}">Interviews List</a></li>
+      </security:authorize>
+      <li><a href="${pageContext.request.contextPath}/reqJobPos">Request Job Position</a></li>
+    </ul>
+    <security:authentication property="principal.username" var="loggedInUser"/>
+     <ul class="nav navbar-nav navbar-right">
+     	<li><a style="text-transform: uppercase;">${loggedInUser}</a></li>
+        <li>
+        <a>
+      	<form:form action="${pageContext.request.contextPath}/logout" id="logoutForm">
+			<input type="submit" value="Logout" style="padding: 0; border: none; background: none; "/>	
+		</form:form>
+		</a>
+      </li>
+      <li></li>
+    </ul>
+</nav>
